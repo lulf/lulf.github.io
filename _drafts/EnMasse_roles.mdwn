@@ -1,0 +1,10 @@
+[[!tag programming cloud technical kubernetes openshift amqp]]
+
+In a cloud environment, you end up having multiple parties involved: the cluster administrator and
+the application developer. The role of the cluster administrator is to be able to provision
+resources, monitor the cluster state and take care of incidents.
+
+The application developer on the other hand, only cares about having a message propagate from one
+system to another, and the messaging service is a way to do that.
+
+With these two roles in mind, EnMasse provi

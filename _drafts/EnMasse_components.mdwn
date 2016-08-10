@@ -1,0 +1,8 @@
+[[!tag programming cloud technical kubernetes openshift amqp]]
+
+EnMasse provides several components that aids when managing a messaging cluster:
+
+   * ragent - The router agent is responsible for configuring the qdrouterd cluster so that routers
+              can talk to each other and brokers.
+   * storage-controller - The storage controller is responsible for provisioning volumes for
+                         brokers, and to ensure that the
