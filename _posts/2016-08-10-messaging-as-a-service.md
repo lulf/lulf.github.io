@@ -8,7 +8,8 @@ Inspired by a great [blog post](http://blog.effectivemessaging.com/2016/08/scala
 
 The [EnMasse](https://enmasseproject.github.io) project was created to provide the required tools and services for deploying and running a messaging service on [Openshift](https://www.openshift.com/). Running on Openshift means you can either run EnMasse on your own instance or in the cloud. You can also run EnMasse on [Openshift Origin](https://www.openshift.org/), which is the upstream community project.
 
-The rest of this post will try to give an initial overview of EnMasse.
+The rest of this post will try to give an initial overview of EnMasse. EnMasse is still under
+development, so a lot of the features mentioned may not be implemented or they are work in progress.
 
 ![EnMasse Overview]({{ site.url }}/images/enmasse_overview.png)
 
@@ -18,7 +19,7 @@ The main components of EnMasse are the router, broker and the cluster admininist
 
 ### Router
 
-The Apache Qpid Dispatch Router allows the service to scale by adding more of them using builtin kubernetes features. The router also hides the broker from the client so that the brokers can be scaled, moved, upgraded and changed without the client seeing.
+The Apache Qpid Dispatch Router allows the service to scale by adding more of them using openshift. The router also hides the broker from the client so that the brokers may be scaled, moved, upgraded and changed without the client noticing.
 
 ### Broker
 
@@ -26,7 +27,7 @@ To support store-and-forward semantics, brokers such as ActiveMQ Artemis is used
 
 ### Cluster administration
 
-In addition to these well known components, EnMasse contains several cluster administration services that manages the router and broker configuration:
+EnMasse contains several cluster administration components that manages the router and broker configuration:
 
    * Configmap-bridge provides a way to subscribe for configmap updates through AMQP.
    * Router agent is responsible for configuring the network of routers based on the address configuration.
