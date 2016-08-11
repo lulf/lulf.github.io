@@ -10,7 +10,7 @@ The [EnMasse](https://enmasseproject.github.io) project was created to provide t
 
 The rest of this post will try to give an initial overview of EnMasse.
 
-![EnMasse Overview](images/enmasse_overview.png)
+![EnMasse Overview]({{ site.url }}/images/enmasse_overview.png)
 
 The configuration files are stored as JSON within openshift as configmaps. The flavor configuration contains the supported variants of broker and router configurations that. The address configuration contains the addresses and their desired semantics such as store-and-forward, multicast and the flavor type. The intention is that the cluster administrator is responsible for the available flavors, while the developer only has to care about which addresses to configure.
 
