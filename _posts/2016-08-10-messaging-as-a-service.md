@@ -13,7 +13,7 @@ development, so a lot of the features mentioned may not be implemented or they a
 
 ![EnMasse Overview]({{ site.url }}/images/enmasse_overview.png)
 
-EnMasse contains two configuration files, address and flavor. The configuration files are stored as JSON within openshift as configmaps. The flavor configuration contains the supported variants of broker and router configurations that. The address configuration contains the addresses the cluster should be able to handle and their desired semantics such as store-and-forward, multicast and the flavor type. The intention is that the cluster administrator is responsible for the available flavors, while the developer only has to care about which addresses to configure.
+EnMasse contains two configuration files, address and flavor. The configuration files are stored as JSON within openshift as configmaps. The flavor configuration contains the supported variants of broker and router configurations. The address configuration contains the addresses the cluster should be able to handle and their desired semantics such as store-and-forward, multicast and the flavor type. The intention is that the cluster administrator is responsible for the available flavors, while the developer only has to care about which addresses to configure.
 
 The main components of EnMasse are the router, broker and the cluster admininistration components.
 
