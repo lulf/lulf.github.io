@@ -9,35 +9,61 @@ Docker containers have become popular means of packaging and running software. I
 environment, containers makes deploying software easy both for developers and system adminstrators.
 In fact, is has become so easy that the roles have started to merged, creating devops.
 
+# Cluster management - nothing new
+
+Cluster management is usually the task of managing and configuring services and processes in a
+distributed system. Ever since the cloud made its entry, cluster management become increasingly
+important. Nodes, an abstract term for a machine, can come and go frequently, and virtualization has
+made managing nodes and applications easier.
+
+Anyone developing or maintaining a service constiting of different standalone components will at
+some time develop some form of cluster management. It starts out as a set of shell scripts at first, then evolving into
+some additional components in the system that will keep track of the topology and state.
+
 Large technology companies like Google, Facebook, Yahoo and others have made a significant
-investement in automating their process. At their scale, this is absolutely necessary in order to
-deliver new features. For smaller companies, the gains have not always been worth the effort.
+investement in automating their deployment process and cluster management facilities. At their scale, this is absolutely necessary in order to deliver new features. For smaller companies, the gains have not always been worth the effort.
 
 Luckily, open source software is now running the world. We have seen software for managing large
 scale distributed systems created and open sourced. Kubernetes, OpenShift, Apache Mesos and Docker
-Swarm are all examples of this, and this article will focus on Kubernetes and OpenShift. But first, a short look at the evolution of software packaging.
+Swarm are all examples of this, and this article will focus on Kubernetes and OpenShift. But first,
+a short look at the evolution of software packaging.
 
-In the beginning was the tarball. It contained the software to distribute, along with a few scripts
-to build and help with installing. It could also contain the software in binary forms built for a
-specific platform. This way of packaging is still used today, and has found a use as a mechanism to
-distribute artifact bundles in CI and CD systems.
+
+# Software packaging
+
+The tarball is one of the most popular way to package software. It typically contains the software
+itself, along with a few scripts to build the source code and/or help with installing the software. 
 
 The biggest downside of tarballs is that there is no metadata and dependency management. The
-dependencies are assumed installed on the target system. The package managers and package format
-solves this problem by combining the software with metadata describing its assumptions about the
-target system. 
+dependencies are assumed to be installed on the target system. The package managers of various Linux distributions and their package formats solve this problem by combining the software with metadata describing its dependencies and assumptions about the target system.
 
 Packages are typically built and distributed as part of a Linux distribution release. In the recent
-years, developers require newer versions of software than what is part of a distribution. Although
-distributions have shortened their release cycles, the respective support provided for updates and
-security fixes is also shortened.
+years, there has been a trend for doing rapid releases, and the packages in a distribution quickly
+become outdated.  Although distributions have shortened their release cycles and some packages are available through third party repositories, programming languages themselves now contain their own package managers that developers use. So, on one hand you have the system administrator who wants to be in control of whatever packages are installed on the host. On the other hand, you have the developer A who needs one set of dependencies, and developer B who needs a different set of dependencies.
 
-With docker containers, we are kind of getting a mix of tarballs and packages. It allows sharing
-dependencies through unionfs and provides metadata, but choose your own way of building your
-software.
+Docker containers allows developers to choose how their application dependencies are installed
+independent of the host system. Moreover, it provides the appropriate abstractions satisfying
+requirements both from developers and system operators. Therefore, container images can be seen as a
+'unit of distribution', and this is indeed the assumption in Kubernetes and OpenShift.
 
-Imagine for a second that all software you installed on your computer was in the form of docker
-containers. Then imagine upgrading your system and keeping images up to date. 
+# Kubernetes
 
-Now how does this relate to cluster management? Well, with continous deployment, the distribution of
-software and run time management of the service is coupled. 
+Now that container images have become the unit of distribution, it allows for creating generic
+cluster management functionality.
+
+Kubernetes is the third generation of cluster management made at Google, and this time they made it
+generic without bindings to Googles own infrastructure. Kubernetes is the second most active github
+project, with Red Hat as the second largest contributor. The reason for that is OpenShift, which
+I will come back to later in this post.
+
+The kubernetes overall architecture is shown below.
+
+INSERT IMAGE HERE
+
+
+
+# Openshift
+
+# Example
+
+# References
