@@ -48,8 +48,8 @@ requirements both from developers and system operators. Therefore, container ima
 
 # Kubernetes
 
-Now that container images have become the unit of distribution, it allows for creating generic
-cluster management functionality.
+Now that container images have become the unit of distribution, it simplifies the work of creating a generic
+cluster management functionality, which exactly what Google has done.
 
 Kubernetes is the third generation of cluster management made at Google, and this time they made it
 generic without bindings to Googles own infrastructure. Kubernetes is the second most active github
@@ -58,11 +58,102 @@ I will come back to later in this post.
 
 The kubernetes overall architecture is shown below.
 
-INSERT IMAGE HERE
+![Kubernetes overview]({{ site.url }}/images/kubernetes_overview.png)
 
+A host in k8s can have 2 roles: master and node. Masters typically (but don't necessarily have to)
+run the central database with the state of all resources in the kubernetes instance. Before diving
+into what the master does, lets take a look at the nodes first.
 
+A node contains an agent process that communicates with the master. The agent process is responsible
+for starting, stopping and configuring pods. A pod is a basic schedulable entity in k8s that may
+have 1 or more containers. This means that a pod in principle can be scheduled to run on any node in the cluster, but this can be restricted through the use of labels. All resources (nodes, pods, etc.) can be labeled, which allows all resources to be looked up using a label selector. 
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+    - name: container1
+      image: mydocker/image:latest
+      ports:
+        - name: main
+          containerPort: 8080
+      volumeMounts:
+        - name: data
+          mountPath: /var/db/app_volume      
+  volumes:
+    - name: data
+      emptyDir:
+```
+
+As you can see in the pod specification, it specifies a container and a set of ports. In addition, the pod specifies a volume that it mounts inside the container. A volume can be backed in many ways:
+
+   * emptyDir
+   * hostPath
+   * gcePersistentDisk
+   * awsElasticBlockStore
+   * nfs
+   * iscsi
+   * flocker
+   * glusterfs
+   * rbd
+   * cephfs
+   * gitRepo
+   * secret
+   * persistentVolumeClaim
+   * downwardAPI
+   * azureFileVolume
+   * azureDisk
+   * vsphereVolume
+   * Quobyte
+    
+I won't go into the different types, but one interesting one is the persistentVolumeClaim type. This mechanism decouples the underlying type of volumes from the claim. This means that volume claims can be created as a resource by an administrator, and a pods may refer to this claim when specifying its volumes. The volume may also refer to a disk exposed by the host system, allowing you to run applications that require high performance local storage.
+
+Lets have another look at the master. The above specification is sent to the master using the kubectl command line tool or the k8s REST API. The master creates the resource in its database, and the scheduler will locate the appropriate node for running the node. The picture below shows a more detailed view of the k8s architecture.
+
+![Kubernetes details]({{ site.url }}/images/kubernetes_overview_detail.png)
+
+Here you can see that the master contains some basic authentication and authorization for external REST clients and a scheduler as mentioned above. The master also runs different controllers, like a replication controller. 
+
+The replication controller manages replicas of a pod. It is specified as a resource in a simpliar fashion as a pod:
+
+```
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: my-controller
+spec:
+  replicas: 3
+  template:
+    spec:
+      containers:
+        - name: container1
+          image: mydocker/image:latest
+          ports:
+            - name: health
+              containerPort: 8080
+          volumeMounts:
+            - name: data
+              mountPath: /var/db/app_volume      
+      volumes:
+        - name: data
+          emptyDir:
+```  
+
+This specification will ensure that there exists 3 pods with the given specification. Moreover, if one of the pods crashes, it will spin up a new instance of that pod. Replication controllers and pods are only two of many types of resources in a k8s cluster, and there are other types as well that can meet your requirements:
+
+* Jobs
+* Deployments
+* PersistentVolume
+* Service
+* Secret
+* ConfigMap
 
 # Openshift
+
+Open
 
 # Example
 
