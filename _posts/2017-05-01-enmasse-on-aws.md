@@ -5,6 +5,8 @@ author: Ulf Lilleengen
 categories: technical enmasse messaging kubernetes aws
 ---
 
+<b>Note: </b> The latest version of this guide can be found at [github](https://github.com/EnMasseProject/enmasse/blob/master/documentation/getting-started/enmasse-on-aws.md)
+
 As I was preparing a demo for my [presentation](http://rivieradev.fr/session/130) at the [RivieraDev](http://rivieradev.fr/) next week, I wrote a guide for setting up EnMasse on AWS in the same way as I am doing for the demo. This is not even very specific to AWS, so you can probably modify the configuration to fit Microsoft Azure or even Google GCE. 
 
 The end result from this guide is an instance of EnMasse suitable for development and/or experimentation, and should not be considered a production ready setup. For instance, no persistence is configured, so neither messages in brokers nor state in other components like hawkular are persisted.
