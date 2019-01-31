@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Building containers on travis CI using Podman"
+title:  "Building containers on Travis CI using Podman"
 author: Ulf Lilleengen
 categories: technical kubernetes podman travis ci
 ---
@@ -9,13 +9,13 @@ Since [Podman](https://podman.io) and [Buildah](https://github.com/containers/bu
 
 The main difference between podman and buildah from a user perspective is that the podman has a wider feature set than buildah, and the podman cli is almost 1:1 with docker. Podman also has the ability to run containers and generate Kubernetes manifests, whereas buildah is focused only on building container images.
 
-Using podman on travis is somewhat a challenge, for a few reasons:
+Using podman on [Travis CI](https://travis-ci.org) is somewhat a challenge, for a few reasons:
 
 * Podman is not available in the default Ubuntu repositories and a newer version of Ubuntu than the
   default travis one is needed
 * Podman assumes a Fedora/CentOS/RHEL container configuration (/etc/containers/registries.conf)
 
-So to replace docker with podman, ensure you have the following set in your .travis.yml:
+So to replace docker with podman, ensure you have the following set in your `.travis.yml`:
 
 ```
 dist: xenial
