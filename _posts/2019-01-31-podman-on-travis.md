@@ -24,7 +24,7 @@ before_install:
 - sudo apt-get update -qq
 - sudo apt-get install -qq -y software-properties-common podman
 - sudo mkdir -p /etc/containers
-- sudo sh -c 'echo \'[registries.search]\nregistries = ["docker.io"]\'' > /etc/containers/registries.conf
+- sudo sh -c 'echo -e "[registries.search]\nregistries = [\"docker.io\"]" > /etc/containers/registries.conf'
 ```
 
 The last 2 lines are necessary for podman to be able to fetch images from Docker Hub.
