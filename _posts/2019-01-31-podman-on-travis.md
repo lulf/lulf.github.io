@@ -5,7 +5,7 @@ author: Ulf Lilleengen
 categories: technical kubernetes podman travis ci
 ---
 
-Since [Podman](https://podman.io) and [Buildah](https://github.com/containers/buildah) appeared on my radar, I've been wanting to try replacing docker. Podman is a replacement for docker, whereas buildah is a replacement for docker build. Although docker works OK, I've seen various issues with different versions of docker not working with Kubernetes and OpenShift, and that the local docker daemon sometimes becomes unresponsive and causes build failure in the [EnMasse](http://enmasse.io) CI. Since podman and buildah does not use a local daemon for building images, they will work without root privileges. The downside is of course if you want downloaded images cached, you will miss the local docker daemon :) 
+Since [Podman](https://podman.io) and [Buildah](https://github.com/containers/buildah) appeared on my radar, I've been wanting to try replacing docker. Podman is a replacement for docker, whereas buildah is a replacement for docker build. Although docker works OK, I've seen various issues with different versions of docker not working with Kubernetes and OpenShift, and that the local docker daemon sometimes becomes unresponsive and causes build failure in the [EnMasse](http://enmasse.io) CI. Since podman and buildah does not use a local daemon for building images, they will work without root privileges. 
 
 The main difference between podman and buildah from a user perspective is that the podman has a wider feature set than buildah, and the podman cli is almost 1:1 with docker. Podman also has the ability to run containers and generate Kubernetes manifests, whereas buildah is focused only on building container images.
 
