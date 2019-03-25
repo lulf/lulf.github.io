@@ -21,9 +21,12 @@ Lets assume that you have a team in your organization managing the messaging inf
 
 The operations team will deploy the messaging infrastructure, and apply the desired configuration templates that they want to support. 
 
-The development teams will deploy their application resources along with the messaging resources needed by the application.
+The development teams will deploy their application resources along with the messaging resources needed by the application, such as `AddressSpace`, `Address` and `MessagingUser` resources.
 
-The messaging resources consists of the AddressSpace, Address and MessagingUser.
+But first, lets create our simple messaging application. Writing messaging clients can be a challenging task, but is made very simple with [Quarkus](quarkus.io), which makes writing reactive messaging applications a breeze. The following client code is sufficient to process an incoming stream of events and act on it:
+
+```
+```
 
 An AddressSpace is a group of addresses that share connection endpoints as well as authentication and
 authorization policies, and is defined as this:
@@ -81,3 +84,75 @@ spec:
   - operations: ["send", "recv"]
     addresses: ["queue1"]
 ```
+
+With the above 3 resources, you have the basics needed to enable an application to use messaging. 
+
+But how does your application get to know the endpoints for its address space?  You may have noticed the `exports` field in the addres space definition. Exports are a way to instruct EnMasse that you want a configmap with the hostname, ports and CA certificate to be created in your namespace. To allow EnMasse to create this resource, we also need to define a Role and RoleBinding for it:
+
+```
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: messaging-config
+spec:
+rules:
+  - apiGroups: [ "" ]
+    resources: [ "configmaps" ]
+    verbs: [ "create" ]
+  - apiGroups: [ "" ]
+    resources: [ "configmaps" ]
+    resourceNames: [ "messaging-config" ]
+    verbs: [ "get", "update", "patch" ]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: messaging-config
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: messaging-config
+subjects:
+- kind: ServiceAccount
+  name: address-space-controller
+  namespace: enmasse-infra
+```
+
+With that in place we can write the deployment manifest for our application:
+
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+  labels:
+    app: myapp
+spec:
+  replicas: 1
+  template:
+    metadata:
+      matchLabels:
+        application: demo
+    spec:
+      containers:
+        - name: app
+          image: myapp:latest
+          env:
+            - name: MESSAGING_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: messaging-config
+                  key: service.host
+            - name: MESSAGING_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: messaging-config
+                  key: service.port.amqps
+```
+
+As you can see, the values of the configmap is mapped as environment variables to our application.
+
+We have seen how you can declare your messaging needs as Kubernetes manifests, as well as your application. This allows your team to follow the gitops model when deploying your applications using messaging on Kubernetes and OpenShift.
+
+See [EnMasse Example Clients](https://github.com/EnMasseProject/enmasse-example-clients/tree/master/quarkus-example-client) for the full example of the application described in this post.
