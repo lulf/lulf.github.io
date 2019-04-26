@@ -211,4 +211,4 @@ As you can see, the values of the configmap is mapped as environment variables t
 
 We have seen how an operations team and a set of development teams can manage messaging as Kubernetes manifests. This allows your whole organisation to follow the gitops model when deploying your applications using messaging on Kubernetes and OpenShift. 
 
-Star our project on [github](https://github.com/EnMasseProject/enmasse/) and follow us on [twitter](https://twitter.com/enmasseio)!
+Star the project on [github](https://github.com/EnMasseProject/enmasse/) and follow on [twitter](https://twitter.com/enmasseio)!
