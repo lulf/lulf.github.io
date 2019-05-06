@@ -7,11 +7,11 @@ categories: technical kubernetes enmasse gitops openshift monitoring prometheus 
 
 With the EnMasse 0.28.0 release, using a [Gitops](https://www.weave.works/technologies/gitops/) workflow to manage your messaging application is even easier than before. Part 2 is a followup on [Gitops and EnMasse](/technical/kubernetes/enmasse/gitops/openshift/2019/04/08/gitops-and-enmasse.html) with focus on the operations side of things. I recommend that you read that article first to get an overview of gitops and EnMasse in general.
 
-So as in the previous article, lets assume that you have a team in your organization managing the messaging infrastructure using EnMasse on Kubernetes or OpenShift, and that you have 2 independent developer teams that both want to use messaging in their applications. The following diagram describes the flow: 
+As in the previous article, lets assume that you have a team in your organization managing the messaging infrastructure using EnMasse on Kubernetes or OpenShift, and that you have 2 independent developer teams that both want to use messaging in their applications. The following diagram describes the flow: 
 
 ![Gitops]({{ site.url }}/images/enmasse_gitops_operations.png)
 
-The operations team will deploy the messaging infrastructure (EnMasse), and commit the desired configuration templates that they want to support to git. A CI process then applies the EnMasse configuration to the cluster.
+The operations team install EnMasse, and commit the desired configuration templates that they want to support to git. A CI process then applies the EnMasse configuration to the cluster.
 
 In this article, we will start with an EnMasse release, remove the bits we don't need, and apply configuration specific to the service we are going to offer. We want to provide the following:
 
@@ -21,29 +21,13 @@ In this article, we will start with an EnMasse release, remove the bits we don't
 
 # Installation
 
-Managing an EnMasse deployment in git can be as simple as unpacking the [release](https://github.com/EnMasseProject/enmasse/releases) bundle and committing the parts that is used for a particular installation. 
+Managing an EnMasse deployment in git can be as simple as unpacking the [release](https://github.com/EnMasseProject/enmasse/releases) bundle and committing the parts that is used for a particular installation. The examples used in this article were tested by applying the resources in the `install/bundles/enmasse` and `install/components/example-roles` folders.
 
-First, unpack the latest release (0.28.0 at the time of writing):
-
-```
-mkdir myservice && cd myservice
-wget https://github.com/EnMasseProject/enmasse/releases/download/0.28.0/enmasse-0.28.0.tgz -o enmasse.tgz
-tar xvf enmasse.tgz
-```
-
-EnMasse can be installed either YAML files or Ansible. In this guide we will use the YAML, and remove the bits that we don't need, and commit them:
-
-```
-git init
-rm -rf enmasse/ansible
-rm -rf enmasse/docs
-git add enmasse
-git commit -a -m 'Initial import'
-```
+The [installation guide](https://enmasse.io/documentation/master/openshift/#installing-using-bundle-messaging) covers the process of installing EnMasse in detail.
 
 # Configuration
 
-The EnMasse service configuration consists of the following resource types:
+Once EnMasse is installed, it needs to be configured. EnMasse is configured by creating one or more instances of the following resources:
 
 * `AuthenticationService` - Describes an authentication service instance used to authenticate messaging clients.
 * `AddressSpacePlan` - Describes the messaging resources available for address spaces using this plan.
@@ -57,7 +41,7 @@ When created, these resources define the configuration that is available to the 
 
 The green entities are those which are managed by the operations team, while the blue entities are created by the developer teams.
 
-In this article, we will create a simple configuration to serve the needs of our developer teams. 
+In this article, we will create a configuration to serve the needs of our developer teams. For evaluation purposes, applying the `install/components/example-plans` and `install/components/example-authservices` will give you a full EnMasse setup with various example configurations.
 
 ### Authentication services
 
@@ -81,7 +65,6 @@ spec:
 ### Infrastructure configuration
 
 Configuration such as as memory, storage, access policies and other settings that relate to a broker can be specified in the infrastructure configuration.
-
 
 The `BrokeredInfraConfig` resource type is used to define the configuration for the infrastructure serving the `brokered` address space types:
 
@@ -109,13 +92,14 @@ spec:
     addressFullPolicy: FAIL
     resources:
       memory: 2Gi
+      storage: 10Gi
 ```
 
 The above configuration will provide 2 different broker configurations that can be referenced by the address space plans.
 
 ### Plans
 
-Plans control how much resources that are consumed by developer teams. In the `brokered` address space type, the teams will anyway get a single broker for each address space, which makes the relationship between `AddressSpacePlan` and the `BrokeredInfraConfig` seem a bit over-complicated. However, at some point EnMasse will support "virtual brokers", allowing teams to share brokers without knowing, in which case there would not necessarily be a 1:1 mapping between the two.
+Plans control how much resources that are consumed by developer teams. In the `brokered` address space type, the teams will anyway get a single broker for each address space, which makes the relationship between `AddressSpacePlan` and the `BrokeredInfraConfig` seem a bit over-complicated. However, for `standard` address space types, different plans may apply different resource limits using the same underlying infrastructure config, in which case there would not necessarily be a 1:1 mapping between the two.
 
 #### Address space plans
 
@@ -179,7 +163,7 @@ With this plan, developers may create up to 1000 addresses.
 
 # Monitoring
 
-EnMasse provides examples for monitoring using Prometheus, Alertmanager and Grafana. The examples assume that you have deployed the [Prometheus Operator](https://github.com/coreos/kube-prometheus) for Prometheus and Altertmanager, and [Grafana Operator](https://github.com/integr8ly/grafana-operator) for setting up Grafana dashboards. An easy way to get both is to install the [Application Monitoring Operator](https://github.com/integr8ly/application-monitoring-operator), which is used on the [master](https://enmasse.io/documentation/master/openshift/#deploy-monitoring-operator-messaging) branch of EnMasse.
+EnMasse provides examples for monitoring using Prometheus, Alertmanager and Grafana. The examples assume that you have deployed the [Prometheus Operator](https://github.com/coreos/kube-prometheus) for Prometheus and Altertmanager, and [Grafana Operator](https://github.com/integr8ly/grafana-operator) for setting up Grafana dashboards. An easy way to get both is to install the [Application Monitoring Operator](https://github.com/integr8ly/application-monitoring-operator), which is covered in the [master branch documentation](https://enmasse.io/documentation/master/openshift/#deploy-monitoring-operator-messaging).
 
 This section will focus on the resources operated by the above operators.
 
