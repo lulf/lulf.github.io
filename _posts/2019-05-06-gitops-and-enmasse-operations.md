@@ -226,21 +226,21 @@ spec:
 
     - alert: ComponentHealth
       annotations: 
-        description: "{{ $labels.job }} has been down for over 5 minutes"
+        description: "{{ \$labels.job }} has been down for over 5 minutes"
         severity: critical
       expr: component_health == 0
       for: 300s
     - alert: AddressSpaceHealth
       annotations:
         description: Address Space(s) have been in a not ready state for over 5 minutes
-        value: "{{ $value }}"
+        value: "{{ \$value }}"
         severity: warning
       expr: address_spaces_not_ready_total > 0
       for: 300s
     - alert: AddressHealth
       annotations:
         description: Address(s) have been in a not ready state for over 5 minutes
-        value: "{{ $value }}"
+        value: "{{ \$value }}"
         severity: warning
       expr: addresses_not_ready_total > 0
       for: 300s
