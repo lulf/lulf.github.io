@@ -37,7 +37,7 @@ Once EnMasse is installed, it needs to be configured. EnMasse is configured by c
 
 When created, these resources define the configuration that is available to the messaging tenants. The relationship between all these entities are described in this figure:
 
-[EnMasse Entities](/images/enmasse-entities.svg)
+[EnMasse Entities](/images/enmasse-entities.png)
 
 The green entities are those which are managed by the operations team, while the blue entities are created by the developer teams.
 
