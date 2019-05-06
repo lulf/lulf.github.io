@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Gitops and EnMasse - Part 2"
+title:  "Gitops and EnMasse - Part 2 (Operations)"
 author: Ulf Lilleengen
 categories: technical kubernetes enmasse gitops openshift monitoring prometheus grafana
 ---
