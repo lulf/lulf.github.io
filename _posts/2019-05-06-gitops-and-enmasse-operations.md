@@ -203,6 +203,7 @@ The prometheus operator allow you to define alerts for metrics by defining a `Pr
 The first alert relates to the EnMasse infrastructure itself, whereas the last 2 relate to the resources created by the developer teams. By alerting on their state, we can receive alerts about infrastructure failures in advance of development teams raising an issue.
 
 ```
+{% raw %}
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
@@ -226,24 +227,25 @@ spec:
 
     - alert: ComponentHealth
       annotations: 
-        description: "{{ \$labels.job }} has been down for over 5 minutes"
+        description: "{{ $labels.job }} has been down for over 5 minutes"
         severity: critical
       expr: component_health == 0
       for: 300s
     - alert: AddressSpaceHealth
       annotations:
         description: Address Space(s) have been in a not ready state for over 5 minutes
-        value: "{{ \$value }}"
+        value: "{{ $value }}"
         severity: warning
       expr: address_spaces_not_ready_total > 0
       for: 300s
     - alert: AddressHealth
       annotations:
         description: Address(s) have been in a not ready state for over 5 minutes
-        value: "{{ \$value }}"
+        value: "{{ $value }}"
         severity: warning
       expr: addresses_not_ready_total > 0
       for: 300s
+{% endraw %}
 ```
 
 ## Pretty things - Grafana dashboards
