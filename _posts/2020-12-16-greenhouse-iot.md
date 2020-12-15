@@ -5,7 +5,7 @@ author: Ulf Lilleengen
 categories: technical iot embedded
 ---
 
-This post should've been written one year ago, when I actually did this project. With another holiday project coming up, it feels good to get this post out before starting on this years project.
+This post should've been written one year ago, when I actually did this project. With another holiday project coming up, it feels necessary to at least post a summary of last years project.
 
 In-door gardening seems to become popular, and rather than spending a lot of money on a nice-looking product like [auk](https://www.auk.eco), I thought I would instead spend twice as much on my own beutiful rig:
 
@@ -60,8 +60,6 @@ The entire backend is written to run in [Kubernetes](https://kubernetes.io).
 ## Result
 
 All in all, I'm pretty happy with the result, even though I suck at carpenting:
-
-The microcontroller mount:
 
 ![Mount](/images/greenhouse/frame_and_microcontroller.jpg)
 
