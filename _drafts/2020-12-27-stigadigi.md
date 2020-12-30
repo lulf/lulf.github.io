@@ -28,26 +28,29 @@ The second approach I tried was to use reed switches (magnetic field detection) 
 
 # Displaying the score
 
-My initial plan was to install a couple of 7-segment displays to show the score. However, the multiplexing of those
+My initial plan was to install a couple of 7-segment displays to show the score. However, the multiplexing these displays required more circuitry, so I postponed that to future work.
 
 
 # Hardware
 
 The final build contains the following hardware:
 
-*
+* BBC micro:bit v2
+* 2 reed switch sensors
+* 1 kitronik micro:bit edge connector
+* 2x magnets
 
-
-
-some sort of optical sensors to detect that the puck was inside the goal area. The buttons on the micro:bit would be used to control game start/stop and the leds would be used to display the score.
 
 TODO: Figure
 
+# Software
 
+The controller software is written in Rust with great help from the nRF HAL crates for working with GPIO and PWM.
 
+# Future work
 
-- Attempt with laser and photoresistor
-- Attempt with reed switch
-- Controller software
-- More reliable detection with more reed switches
-- Future work - cloud?
+Even though the reed switches are detecting most goals, I still think there is some room for improvement, so I will mount another couple of switches.
+
+Connecting the controller to the cloud is on the road map, and I have an early implementation of the API that integrates with PostgreSQL. The missing piece is to have the controller communicate with internet, and I'm exploring multiple options, the likely approach being to use an ESP8266 for Wi-Fi connectivity.
+
+All in all, its been a fun project, and I look forward to improve it further.
