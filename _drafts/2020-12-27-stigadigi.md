@@ -5,33 +5,44 @@ author: Ulf Lilleengen
 categories: technical embedded nrf microbit
 ---
 
-[Stiga Table Hockey](https://www.stigasports.com/eu/leisure-play/table-games/table-hockey) is a classical table game here in Norway, and familiar many. One of my side projects while studying was to implement an automated goal detection mechanism and log results online. I did manage to scrap together a [php](https://github.com/lulf/stigadigi/tree/ecdd4e0f8953c1d14f7a9ecd41f7055be03fa4a3) application to keep track of scores, and some buttons to register goals, but I did not manage to get the goal detection implemented.
+[Stiga Table Hockey](https://www.stigasports.com/eu/leisure-play/table-games/table-hockey) is a classical table game here in Norway. One of my side projects while studying was to implement an automated goal detection mechanism and log results online. I did manage to scrap together a [php(!)](https://github.com/lulf/stigadigi/tree/ecdd4e0f8953c1d14f7a9ecd41f7055be03fa4a3) application to keep track of scores, and some buttons to register goals, but I did not manage to get the goal detection implemented. As much fun as it can be to get a 10 year old web application to run again, I figured it was time for a rewrite.
+
+Due to a renewed interest in Rust and embedded on my part, I decided to re-implement this project during the corona christmas holidays of 2020. All of the software is available on [github](https://github.com/lulf/stigadigi).
 
 # Rethinking the design
 
-Due to a renewed interest in Rust and embedded on my part, I decided to re-implement this project during the corona christmas holidays of 2020.
+The original plan was to support the following in the new design:
 
-The original plan was to support the following:
-
-* Read sensor data when puck is inside the goal area
+* Detect when puck is inside the goal area
 * Handle button events to start and stop games
 * Display game state for the players
 * Forward live game data to a web service 
 
-# Exploring sensors
+# Goal detection
 
 The most important pieces of this work was to find a reliable way to detect goal. The initial approach I took was to drill a few holes in the goal and place a photoresistor and laser emitter on each side of the goal.
 
-This solution proved difficult to mount and it required very accurate positioning of the laser and photoresistor. 
+Although this mechanism detected a goal with high accuracy, it proved difficult to mount the sensors as it required very accurate positioning of the laser and photoresistor. 
 
-The second approach I tried was to use reed switches (magnetic field detection) and modify the puck with a small magnet. After trying a few differently sized magnets, I found one that would get detected reliably, while not getting stuck on the hockey stick of the players (which is made of metal!).
+The second approach I tried was to use reed switches (magnetic field detection), drill a hole in the puck and embed a small magnet. After trying a few differently sized magnets, I found one that would get detected reliably, while not getting stuck on the hockey stick of the players (which is made of metal!).
 
 ![/images/IMG_5633.JPG](Puck)
+
+Mounting the reed switch in the goal area was also quite simple:
+
 ![/images/IMG_5635.JPG](Reed switch)
+
+# Start and stop events
+
+The micro:bit cotnains two buttons. The left button will start/stop the game, and the right button will undo the last operation, in the event of a wrongly detected goal.
 
 # Displaying the score
 
-My initial plan was to install a couple of 7-segment displays to show the score. However, the multiplexing these displays required more circuitry, so I postponed that to future work.
+My initial plan was to install a couple of 7-segment displays to show the score. However, the multiplexing these displays required more circuitry, so I postponed that to future work. Luckily, the micro:bit has a 5x5 LED grid, and I decided to use that to display the score.
+
+# Forwarding live game data
+
+I started writing a REST API that the controller would talk to to store the game state. The API will eventually also be able to update the player rating depending on which players played against each other. Due to lack of time I decided to postpone this work, but the initial work is stored in the repository.
 
 # Hardware
 
@@ -44,7 +55,7 @@ The final build contains the following hardware:
 
 # Software
 
-The [controller software](https://github.com/lulf/stigadigi) is written in Rust with great help from the nRF HAL crates for working with peripherals.
+The [controller software](https://github.com/lulf/stigadigi) is written in Rust with great help from the nRF HAL crates for working with peripherals. The controller maintains a game state that is initialized when a game is started. The controller maintains the entire game state and all events throughout a game until one of the players reach the "winning score". 
 
 # Future work
 
