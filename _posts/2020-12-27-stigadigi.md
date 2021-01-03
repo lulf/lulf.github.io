@@ -26,11 +26,11 @@ Although this mechanism detected a goal with high accuracy, it proved difficult 
 
 The second approach I tried was to use reed switches (magnetic field detection), drill a hole in the puck and embed a small magnet. After trying a few differently sized magnets, I found one that would get detected reliably, while not getting stuck on the hockey stick of the players (which is made of metal!).
 
-![/images/IMG_5633.JPG](Puck)
+![/images/stigadigi/IMG_5633.JPG](Puck)
 
 Mounting the reed switch in the goal area was also quite simple:
 
-![/images/IMG_5635.JPG](Reed switch)
+![/images/stigadigi/IMG_5635.JPG](Reed switch)
 
 # Start and stop events
 
@@ -59,7 +59,7 @@ The [controller software](https://github.com/lulf/stigadigi) is written in Rust 
 
 # Future work
 
-![/images/Fil_003.jpeg](Finished!)
+![/images/stigadigi/Fil_003.jpeg](Finished!)
 
 Even though the reed switches are detecting most goals, I still think there are some blind spots after testing, so I will mount another couple of switches.
 
