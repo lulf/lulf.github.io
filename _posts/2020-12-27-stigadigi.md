@@ -5,7 +5,11 @@ author: Ulf Lilleengen
 categories: technical embedded nrf microbit
 ---
 
-[Stiga Table Hockey](https://www.stigasports.com/eu/leisure-play/table-games/table-hockey) is a classical table game here in Norway. One of my side projects while studying was to implement an automated goal detection mechanism and log results online. I did manage to scrap together a [php(!)](https://github.com/lulf/stigadigi/tree/ecdd4e0f8953c1d14f7a9ecd41f7055be03fa4a3) application to keep track of scores, and some buttons to register goals, but I did not manage to get the goal detection implemented. As much fun as it can be to get a 10 year old web application to run again, I figured it was time for a rewrite.
+[Stiga Table Hockey](https://www.stigasports.com/eu/leisure-play/table-games/table-hockey) is a classical table game here in Norway. 
+
+![Stiga](https://www.stigasports.com/media/catalog/product/cache/97225023366fe5fa80ccc819e266eda2/1/6/1605700805-71-1143-01_1.jpg)
+
+One of my side projects while studying was to implement an automated goal detection mechanism and log results online. I did manage to scrap together a [php(!)](https://github.com/lulf/stigadigi/tree/ecdd4e0f8953c1d14f7a9ecd41f7055be03fa4a3) application to keep track of scores, and some buttons to register goals, but I did not manage to get the goal detection implemented. As much fun as it can be to get a 10 year old web application to run again, I figured it was time for a rewrite.
 
 Due to a renewed interest in Rust and embedded on my part, I decided to re-implement this project during the corona christmas holidays of 2020. All of the software is available on [github](https://github.com/lulf/stigadigi).
 
