@@ -13,15 +13,15 @@ It's been almost 3 years since I posted on this blog last time, so this is a goo
 
 The first thing that I remember after joining was that Red Hat felt like the totally right place for me. Open source mindset throughout the organization and a place where good ideas could come from anyone and anywhere. I got to work on a new project that we eventually named [EnMasse](enmasseproject.github.io), which I've written about previously on this blog.
 
-At the yearly face to face gatherings I got to know others from the team, and made many new friends. As the years passed, we grew the team and was able to get customers on the associated products. I travelled to conferences to speak about the project and learned a lot. I think the most valuable less from that was how to work with others remotely and that even if you are remote, a periodic refresh with face-to-face meeting is still needed to better understand oneanother.
+At the yearly face to face gatherings I got to know others from the team, and made many new friends. As the years passed, we grew the team and was able to meet customers using the associated products. I traveled to conferences to speak about the project and learned a lot about building communities. I think the most valuable lesson from this period was how to work with others remotely and that even if you are remote, a periodic refresh with face-to-face meeting is still needed to better understand each other.
 
-Then one day in December 2020 I got the opportunity to join another team that was doing IoT and Rust.
+Then one day in December 2020 I got the opportunity to join another team at Red Hat that was using Rust to build and Internet of Things ecosystem.
 
 ## Re-discovering embedded
 
-My previous blog post was written just after I decided to join my new team, working on the [drogue.io](https://drogue.io) project I have always been interested in embedded, and Rust, but hadn't yet tried to combine those two. From past experience, embedded C was a painful and the feeling of being extermely unproductive compared to higher level languages. 
+My previous blog post was written just after I decided to join my new team, working on the [drogue.io](https://drogue.io) project I have always been interested in embedded, and Rust, but hadn't yet tried to combine those two. From past experience, embedded C was a painful and the feeling of being unproductive compared to higher level languages. 
 
-With Rust, all of that changed. The programming language itself reminded me about the good parts of Haskell, and the toolchain turned out to be very close to regular application development. Finally I re-discovered the world of embedded, and during the years on the Drogue IoT team, I learned more than I ever have. Thanks to my team mates and fantastic manager, I got to work on these things:
+With Rust, all of that changed for me. The programming language itself reminded me about the good parts of Haskell, and the toolchain turned out to be very close to regular application development. Finally I re-discovered the world of embedded, and during the years on the Drogue IoT team, I learned more than I ever have. Thanks to my team mates and fantastic manager, I got to work on these things:
 
 * A embedded [TLS 1.3](https://github.com/drogue-iot/embedded-tls) implementation
 * An [Actor Framework](https://github.com/drogue-iot/ector)
