@@ -1,4 +1,4 @@
-j---
+---
 layout: post
 title: Leaving Red Hat
 author: Ulf Lilleengen
