@@ -15,7 +15,7 @@ The first thing that I remember after joining was that Red Hat felt like the tot
 
 At the yearly face to face gatherings I got to know others from the team, and made many new friends. As the years passed, we grew the team and was able to meet customers using the associated products. I traveled to conferences to speak about the project and learned a lot about building communities. I think the most valuable lesson from this period was how to work with others remotely and that even if you are remote, a periodic refresh with face-to-face meeting is still needed to better understand each other.
 
-Then one day in December 2020 I got the opportunity to join another team at Red Hat that was using Rust to build and Internet of Things ecosystem.
+Then one day in December 2020 I got the opportunity to join another team at Red Hat that was using Rust to build an Internet of Things ecosystem.
 
 ## Re-discovering embedded
 
