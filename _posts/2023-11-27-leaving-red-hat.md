@@ -19,7 +19,7 @@ Then one day in December 2020 I got the opportunity to join another team at Red 
 
 ## Re-discovering embedded
 
-My previous blog post was written just after I decided to join my new team, working on the [drogue.io](https://drogue.io) project I have always been interested in embedded, and Rust, but hadn't yet tried to combine those two. From past experience, embedded C was a painful and the feeling of being unproductive compared to higher level languages. 
+My previous blog post was written just after I decided to join my new team, working on the [drogue.io](https://drogue.io) project I have always been interested in embedded, and Rust, but hadn't yet tried to combine those two. From past experience, embedded C was painful and I got a feeling of being unproductive compared to using higher level languages. 
 
 With Rust, all of that changed for me. The programming language itself reminded me about the good parts of Haskell, and the toolchain turned out to be very close to regular application development. Finally I re-discovered the world of embedded, and during the years on the Drogue IoT team, I learned more than I ever have. Thanks to my team mates and fantastic manager, I got to work on these things:
 
