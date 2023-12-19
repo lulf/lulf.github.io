@@ -5,9 +5,9 @@ author: Ulf Lilleengen
 categories: non-technical work
 ---
 
-On December 4th, I started working for [Akiles](akiles.app), a [PropTech](https://en.wikipedia.org/wiki/Property_technology) company selling products such as door locks integrated with a cloud service for access control. In the past three years, I've spent a lot of time creating generic IoT infrastrucure both on the embedded and backend side, and I'm very excited to experience IoT in a real world use case.
+On December 4th, I started working for [Akiles](https://akiles.app), a [PropTech](https://en.wikipedia.org/wiki/Property_technology) company selling products such as door locks integrated with a cloud service for access control. In the past three years, I've spent a lot of time creating generic IoT infrastrucure both on the embedded and backend side, and I'm very excited to experience IoT in a real world use case.
 
-Another great thing is that Akiles has been using Rust for their firmware for a while, and the [Embassy](embassy.dev) project was started by one of the founders. Having already worked together upstream on the same code base was also a good way to understand a little of what I was getting into.
+Another great thing is that Akiles has been using Rust for their firmware for a while, and the [Embassy](https://embassy.dev) project was started by one of the founders. Having already worked together upstream on the same code base was also a good way to understand a little of what I was getting into.
 
 <div align="center">
 <figure>
