@@ -23,7 +23,7 @@ paginate: 5
 author: Ulf Lilleengen
 twitter_username: lulf
 github_username:  lulf
-gems: [jekyll-paginate]
+gems: [jekyll-paginate, jekyll-feed]
 
 # Build settings
 markdown: kramdown
