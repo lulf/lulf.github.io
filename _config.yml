@@ -23,7 +23,7 @@ paginate: 5
 author: Ulf Lilleengen
 twitter_username: lulf
 github_username:  lulf
-gems: [jekyll-paginate, jekyll-feed]
+plugins: [jekyll-paginate, jekyll-feed, jekyll-remote-theme]
 remote_theme: samarsault/plainwhite-jekyll
 
 # Build settings

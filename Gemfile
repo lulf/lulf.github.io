@@ -14,6 +14,7 @@ gem "jekyll", "4.3.3"
 # This is the default theme for new Jekyll sites. You may change this to anything you like.
 gem "minima"
 gem "plainwhite"
+gem "jekyll-remote-theme"
 
 
 # If you want to use GitHub Pages, remove the "gem "jekyll"" above and
