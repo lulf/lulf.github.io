@@ -29,11 +29,13 @@ remote_theme: samarsault/plainwhite-jekyll
 # Build settings
 markdown: kramdown
 show_excerpts: true
+#theme: plainwhite
 
 plainwhite:
   name: Ulf Lilleengen
   portfolio_image:  "assets/me.png"
   tagline: Developer. Engineer
+  disqus_shortname: lulf
   date_format: "%b %-d, %Y"
   sitemap: true
   navigation:
