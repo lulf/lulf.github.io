@@ -142,9 +142,14 @@
     const seen = new Map(); // uri -> createdAt
     for (const q of variants) {
       const url = `${PUBLIC_API}/app.bsky.feed.searchPosts?author=${encodeURIComponent(handle)}&q=${encodeURIComponent(q)}&limit=25`;
-      const r = await fetch(url);
-      if (!r.ok) continue;
-      const data = await r.json();
+      let data;
+      try {
+        const r = await fetch(url);
+        if (!r.ok) continue;
+        data = await r.json();
+      } catch (_) {
+        continue;
+      }
       for (const p of (data.posts || [])) {
         // Confirm the post actually references this URL — search may be fuzzy
         const text = (p.record && p.record.text) || '';
@@ -162,35 +167,52 @@
     return earliest.split('/').pop();
   }
 
+  function showNoThread() {
+    list.innerHTML = `<p><em>@${escapeHtml(handle)} hasn't posted about this article on Bluesky yet.</em></p>`;
+  }
+
   async function load() {
+    let postId;
     try {
-      const postId = await findPostId();
-      if (!postId) {
-        list.innerHTML = '<p><em>No Bluesky thread found for this post yet.</em></p>';
-        return;
-      }
-
-      const did = await resolveDid(handle);
-      const uri = `at://${did}/app.bsky.feed.post/${postId}`;
-
-      if (intro) {
-        intro.innerHTML = `Reply on <a href="https://bsky.app/profile/${escapeHtml(handle)}/post/${escapeHtml(postId)}" target="_blank" rel="noopener">this Bluesky thread</a> to leave a comment.`;
-      }
-
-      const r = await fetch(`${PUBLIC_API}/app.bsky.feed.getPostThread?uri=${encodeURIComponent(uri)}&depth=10`);
-      if (!r.ok) throw new Error(`could not fetch thread (${r.status})`);
-      const data = await r.json();
-      const replies = (data.thread && data.thread.replies) || [];
-
-      if (!replies.length) {
-        list.innerHTML = '<p><em>No comments yet — be the first.</em></p>';
-        return;
-      }
-
-      list.innerHTML = sortReplies(replies).map(r => renderThread(r, 0)).join('');
-    } catch (err) {
-      list.innerHTML = `<p><em>Could not load comments: ${escapeHtml(err.message)}</em></p>`;
+      postId = await findPostId();
+    } catch (_) {
+      postId = null;
     }
+    if (!postId) {
+      showNoThread();
+      return;
+    }
+
+    let did;
+    try {
+      did = await resolveDid(handle);
+    } catch (_) {
+      showNoThread();
+      return;
+    }
+    const uri = `at://${did}/app.bsky.feed.post/${postId}`;
+
+    if (intro) {
+      intro.innerHTML = `Reply on <a href="https://bsky.app/profile/${escapeHtml(handle)}/post/${escapeHtml(postId)}" target="_blank" rel="noopener">this Bluesky thread</a> to leave a comment.`;
+    }
+
+    let data;
+    try {
+      const r = await fetch(`${PUBLIC_API}/app.bsky.feed.getPostThread?uri=${encodeURIComponent(uri)}&depth=10`);
+      if (!r.ok) throw new Error(`status ${r.status}`);
+      data = await r.json();
+    } catch (_) {
+      showNoThread();
+      return;
+    }
+    const replies = (data.thread && data.thread.replies) || [];
+
+    if (!replies.length) {
+      list.innerHTML = '<p><em>No comments yet — be the first.</em></p>';
+      return;
+    }
+
+    list.innerHTML = sortReplies(replies).map(r => renderThread(r, 0)).join('');
   }
 
   load();
