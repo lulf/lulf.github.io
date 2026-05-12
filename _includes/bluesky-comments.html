@@ -1,0 +1,198 @@
+<div id="bluesky-comments"
+     data-handle="{{ site.plainwhite.bluesky_handle }}"
+     data-post-id="{{ page.bsky_post_id }}"
+     data-page-url="{{ page.url | absolute_url }}"
+     style="margin-top: 40px;">
+  <h3 style="margin-bottom: 8px;">Comments</h3>
+  <p id="bluesky-comments-intro" style="font-size: 0.9em;">
+    To leave a comment, reply on Bluesky from
+    <a href="https://bsky.app/profile/{{ site.plainwhite.bluesky_handle }}"
+       target="_blank" rel="noopener">@{{ site.plainwhite.bluesky_handle }}</a>'s
+    post linking to this article.
+  </p>
+  <div id="bluesky-comments-list"><em>Loading comments…</em></div>
+</div>
+
+<style>
+  #bluesky-comments .bsky-comment {
+    border-left: 2px solid var(--border-color, #ccc);
+    padding: 8px 0 8px 12px;
+    margin: 12px 0;
+  }
+  #bluesky-comments .bsky-comment-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9em;
+    margin-bottom: 4px;
+  }
+  #bluesky-comments .bsky-comment-header img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  #bluesky-comments .bsky-comment-header a {
+    color: inherit;
+    text-decoration: none;
+  }
+  #bluesky-comments .bsky-comment-header a:hover { text-decoration: underline; }
+  #bluesky-comments .bsky-comment-handle { color: #888; font-weight: normal; }
+  #bluesky-comments .bsky-comment-body {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+  }
+  #bluesky-comments .bsky-comment-meta {
+    font-size: 0.8em;
+    color: #888;
+    margin-top: 4px;
+  }
+  #bluesky-comments .bsky-comment-meta a { color: inherit; text-decoration: none; }
+  #bluesky-comments .bsky-comment-meta a:hover { text-decoration: underline; }
+</style>
+
+<script>
+(function () {
+  const container = document.getElementById('bluesky-comments');
+  const list = document.getElementById('bluesky-comments-list');
+  const intro = document.getElementById('bluesky-comments-intro');
+  const handle = container.dataset.handle;
+  const manualPostId = container.dataset.postId;
+  const pageUrl = container.dataset.pageUrl;
+  const MAX_DEPTH = 5;
+  const PUBLIC_API = 'https://public.api.bsky.app/xrpc';
+
+  function escapeHtml(s) {
+    const div = document.createElement('div');
+    div.textContent = s == null ? '' : String(s);
+    return div.innerHTML;
+  }
+
+  function sortReplies(replies) {
+    return [...replies].sort((a, b) => {
+      const al = (a.post && a.post.likeCount) || 0;
+      const bl = (b.post && b.post.likeCount) || 0;
+      if (al !== bl) return bl - al;
+      const ad = new Date(a.post && a.post.record && a.post.record.createdAt || 0).getTime();
+      const bd = new Date(b.post && b.post.record && b.post.record.createdAt || 0).getTime();
+      return ad - bd;
+    });
+  }
+
+  function renderThread(thread, depth) {
+    if (!thread || !thread.post) return '';
+    const p = thread.post;
+    const a = p.author || {};
+    const rkey = (p.uri || '').split('/').pop();
+    const postUrl = `https://bsky.app/profile/${a.handle}/post/${rkey}`;
+    const profileUrl = `https://bsky.app/profile/${a.handle}`;
+    const created = p.record && p.record.createdAt ? new Date(p.record.createdAt) : null;
+    const dateStr = created ? created.toLocaleString() : '';
+
+    let html = `<div class="bsky-comment" style="margin-left:${depth * 12}px">`;
+    html += `<div class="bsky-comment-header">`;
+    if (a.avatar) {
+      html += `<img src="${escapeHtml(a.avatar)}" alt="" loading="lazy">`;
+    }
+    html += `<a href="${escapeHtml(profileUrl)}" target="_blank" rel="noopener">`;
+    html += `<strong>${escapeHtml(a.displayName || a.handle || 'unknown')}</strong> `;
+    html += `<span class="bsky-comment-handle">@${escapeHtml(a.handle || '')}</span>`;
+    html += `</a></div>`;
+    html += `<div class="bsky-comment-body">${escapeHtml(p.record && p.record.text || '')}</div>`;
+    html += `<div class="bsky-comment-meta">`;
+    html += `<a href="${escapeHtml(postUrl)}" target="_blank" rel="noopener">${escapeHtml(dateStr)}</a>`;
+    html += ` · ♥ ${p.likeCount || 0}`;
+    html += ` · 🔁 ${p.repostCount || 0}`;
+    html += ` · 💬 ${p.replyCount || 0}`;
+    html += `</div>`;
+
+    if (depth < MAX_DEPTH && Array.isArray(thread.replies) && thread.replies.length) {
+      for (const reply of sortReplies(thread.replies)) {
+        html += renderThread(reply, depth + 1);
+      }
+    }
+    html += `</div>`;
+    return html;
+  }
+
+  async function resolveDid(h) {
+    const r = await fetch(`${PUBLIC_API}/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(h)}`);
+    if (!r.ok) throw new Error(`could not resolve handle (${r.status})`);
+    return (await r.json()).did;
+  }
+
+  // Search for the author's post that links to this blog entry.
+  // Returns the rkey of the earliest matching post, or null.
+  async function findPostId() {
+    if (manualPostId) return manualPostId;
+    if (!pageUrl) return null;
+
+    // Try a couple of URL variants (with/without www, with/without trailing slash)
+    const variants = new Set();
+    try {
+      const u = new URL(pageUrl);
+      const paths = [u.pathname.replace(/\/$/, ''), u.pathname.endsWith('/') ? u.pathname : u.pathname + '/'];
+      const hosts = [u.host, u.host.replace(/^www\./, ''), 'www.' + u.host.replace(/^www\./, '')];
+      for (const h of hosts) for (const p of paths) variants.add(`${u.protocol}//${h}${p}`);
+    } catch (_) {
+      variants.add(pageUrl);
+    }
+
+    const seen = new Map(); // uri -> createdAt
+    for (const q of variants) {
+      const url = `${PUBLIC_API}/app.bsky.feed.searchPosts?author=${encodeURIComponent(handle)}&q=${encodeURIComponent(q)}&limit=25`;
+      const r = await fetch(url);
+      if (!r.ok) continue;
+      const data = await r.json();
+      for (const p of (data.posts || [])) {
+        // Confirm the post actually references this URL — search may be fuzzy
+        const text = (p.record && p.record.text) || '';
+        const embedUri = (p.embed && p.embed.external && p.embed.external.uri) || '';
+        if (text.includes(q) || embedUri === q || embedUri.startsWith(q)) {
+          seen.set(p.uri, p.record && p.record.createdAt || '');
+        }
+      }
+    }
+    if (!seen.size) return null;
+    // Pick earliest
+    const earliest = [...seen.entries()].sort((a, b) => {
+      return new Date(a[1]).getTime() - new Date(b[1]).getTime();
+    })[0][0];
+    return earliest.split('/').pop();
+  }
+
+  async function load() {
+    try {
+      const postId = await findPostId();
+      if (!postId) {
+        list.innerHTML = '<p><em>No Bluesky thread found for this post yet.</em></p>';
+        return;
+      }
+
+      const did = await resolveDid(handle);
+      const uri = `at://${did}/app.bsky.feed.post/${postId}`;
+
+      if (intro) {
+        intro.innerHTML = `Reply on <a href="https://bsky.app/profile/${escapeHtml(handle)}/post/${escapeHtml(postId)}" target="_blank" rel="noopener">this Bluesky thread</a> to leave a comment.`;
+      }
+
+      const r = await fetch(`${PUBLIC_API}/app.bsky.feed.getPostThread?uri=${encodeURIComponent(uri)}&depth=10`);
+      if (!r.ok) throw new Error(`could not fetch thread (${r.status})`);
+      const data = await r.json();
+      const replies = (data.thread && data.thread.replies) || [];
+
+      if (!replies.length) {
+        list.innerHTML = '<p><em>No comments yet — be the first.</em></p>';
+        return;
+      }
+
+      list.innerHTML = sortReplies(replies).map(r => renderThread(r, 0)).join('');
+    } catch (err) {
+      list.innerHTML = `<p><em>Could not load comments: ${escapeHtml(err.message)}</em></p>`;
+    }
+  }
+
+  load();
+})();
+</script>

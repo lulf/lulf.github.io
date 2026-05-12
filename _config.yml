@@ -35,7 +35,7 @@ plainwhite:
   name: Ulf Lilleengen
   portfolio_image:  "assets/me.png"
   tagline: Developer. Engineer
-  disqus_shortname: lulf
+  bluesky_handle: lulf.no
   date_format: "%b %-d, %Y"
   sitemap: true
   navigation:
